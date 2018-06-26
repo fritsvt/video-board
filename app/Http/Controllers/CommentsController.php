@@ -15,7 +15,8 @@ class CommentsController extends Controller
             $this->validate($request, [
                 'post_id' => 'required|exists:posts,id',
                 'parent_comment_id' => 'exists:comments,id,post_id,' . $request->input('post_id'),
-                'body' => 'required|min:10|max:1000'
+                'body' => 'required|min:10|max:1000',
+                'g-recaptcha-response' => 'required|captcha'
             ]);
         } catch (ValidationException $e) {
             return response()->json([

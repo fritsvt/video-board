@@ -1,7 +1,7 @@
 <template>
 <div class="card">
     <h1 class="title">Submit a video</h1>
-    <form @submit.prevent="submitPost">
+    <form @submit.prevent="verifyCaptcha">
         <div class="field">
         <label class="label">Youtube URL</label>
         <div class="control has-icons-left">
@@ -30,7 +30,8 @@
               </div>
               <p v-if="form.errors.body" class="help is-danger">{{form.errors.body[0]}}</p>
             </div>
-            <button type="submit" :class="{ 'is-loading': form.loading }" class="button is-primary is-fullwidth">Submit video</button>
+            <button :data-sitekey="captchaKey" :data-callback="submitPost" type="submit" :class="{ 'is-loading': form.loading }" class="button is-primary is-fullwidth g-recaptcha">Submit video</button>
+            <recaptcha ref="recaptcha" @verify="submitPost"></recaptcha>
         </div>
         </transition>
     </form>
@@ -39,7 +40,12 @@
 </template>
 
 <script>
+import Recaptcha from "@/components/Recaptcha";
+
 export default {
+  components: {
+    Recaptcha
+  },
   name: "NewPost",
   data() {
     return {
@@ -52,8 +58,13 @@ export default {
     };
   },
   methods: {
-    submitPost() {
+    verifyCaptcha() {
       this.form.loading = true;
+      this.$refs.recaptcha.execute();
+    },
+    submitPost(gRecaptchaResponse) {
+      this.form.data["g-recaptcha-response"] = gRecaptchaResponse;
+
       axios
         .post("posts/create", this.form.data)
         .then(res => {
@@ -71,6 +82,11 @@ export default {
           this.form.errors = err.response.data.errors;
           this.form.loading = false;
         });
+    }
+  },
+  computed: {
+    captchaKey() {
+      return process.env.CAPTCHA_KEY;
     }
   }
 };

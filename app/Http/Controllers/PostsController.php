@@ -14,7 +14,8 @@ class PostsController extends Controller
             $this->validate($request, [
                 'title' => 'required|min:3|max:60',
                 'body' => 'max:1000',
-                'youtube_url' => 'required|youtube'
+                'youtube_url' => 'required|youtube',
+                'g-recaptcha-response' => 'required|captcha'
             ]);
         } catch (ValidationException $e) {
             return response()->json([

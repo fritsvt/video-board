@@ -1,7 +1,8 @@
 <template>
     <div class="columns">
         <div class="column is-12-mobile is-8-tablet is-4-desktop">
-            <form @submit.prevent="submitReply">
+            <form @submit.prevent="verifyCaptcha">
+                <p v-if="form.errors['g-recaptcha-response']" class="has-text-danger">Sorry, your post has been blocked by recpatcha</p>
                 <div class="field">
                     <label class="label"></label>
                     <div class="control">
@@ -11,6 +12,7 @@
                         <div class="bottom-bar">
                             <span>{{form.data.body ? form.data.body.length : 0}} / 1000</span>
                             <button type="submit" :class="{ 'is-loading': form.loading }" class="button is-primary">Post reply</button>
+                            <recaptcha ref="recaptcha" @verify="submitReply"></recaptcha>
                         </div>
                     </div>
                 </div>
@@ -20,9 +22,14 @@
 </template>
 
 <script>
+import Recaptcha from "./Recaptcha";
+
 export default {
   name: "ReplyComment",
   props: ["parent", "post"],
+  components: {
+    Recaptcha
+  },
   data() {
     return {
       form: {
@@ -31,14 +38,20 @@ export default {
         data: {
           post_id: this.post,
           parent_comment_id: this.parent,
-          body: ""
+          body: "",
+          "g-recaptcha-response": ""
         }
       }
     };
   },
   methods: {
-    submitReply() {
+    verifyCaptcha() {
       this.form.loading = true;
+      this.$refs.recaptcha.execute();
+    },
+    submitReply(gRecaptchaResponse) {
+      this.form.data["g-recaptcha-response"] = gRecaptchaResponse;
+
       axios
         .post("comments/create", this.form.data)
         .then(res => {

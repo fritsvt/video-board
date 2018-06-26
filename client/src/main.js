@@ -9,7 +9,10 @@ import "buefy/lib/buefy.css";
 
 window.moment = require("moment");
 window.axios = require("axios");
-window.axios.defaults.baseURL = "https://api-videoboard.v77.nl/api/";
+window.axios.defaults.baseURL = "http://videoboard.test/api/";
+window.env = {
+  captcha: "6LfyrmAUAAAAAFkGHvx-jtbMyqyOMLyRSph1HMC8"
+};
 
 Vue.config.productionTip = false;
 
