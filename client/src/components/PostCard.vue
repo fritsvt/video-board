@@ -86,8 +86,13 @@ export default {
     .youtube-icon {
       position: absolute;
       height: 30px;
-      left: 60px;
+      left: 55px;
       top: 40px;
+
+      @media screen and (max-width: 768px) {
+        left: 66px;
+        top: 53px;
+      }
     }
   }
 

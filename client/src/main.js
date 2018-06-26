@@ -4,11 +4,12 @@ import router from "./router";
 import Vuex from "vuex";
 
 import Buefy from "buefy";
+import "./scss/app.scss";
 import "buefy/lib/buefy.css";
 
 window.moment = require("moment");
 window.axios = require("axios");
-window.axios.defaults.baseURL = "http://videoboard.test/api/";
+window.axios.defaults.baseURL = "https://api-videoboard.v77.nl/api/";
 
 Vue.config.productionTip = false;
 

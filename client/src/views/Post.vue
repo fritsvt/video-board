@@ -12,26 +12,28 @@
       </div>
     </div>
 
-    <div class="columns">
-      <div class="column is-8-tablet is-6-desktop">
-        <h1 class="title">{{post.title}}</h1>
-        <p class="author">Posted {{timestamp}}</p>
-        <iframe width="100%" height="400" :src="`https://www.youtube.com/embed/${post.youtube_id}?rel=0`" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        <p class="post-body">{{post.body}}</p>
+    <template v-if="post">
+      <div class="columns">
+        <div class="column is-8-tablet is-6-desktop">
+          <h1 class="title">{{post.title}}</h1>
+          <p class="author">Posted {{timestamp}}</p>
+          <iframe width="100%" height="400" :src="`https://www.youtube.com/embed/${post.youtube_id}?rel=0`" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <p class="post-body">{{post.body}}</p>
+        </div>
       </div>
-    </div>
 
-    <div class="columns">
-      <div class="column is-12-mobile is-10-desktop">
-        <template v-if="post && !loading">
-          <p>Reply to this post</p>
-          <reply-comment :post="post.id"></reply-comment>
+      <div class="columns">
+        <div class="column is-12-mobile is-10-desktop">
+          <template v-if="post && !loading">
+            <p>Reply to this post</p>
+            <reply-comment :post="post.id"></reply-comment>
 
-          <p>Replies</p>
-          <comments :comments="post.comments" offset="0"></comments>
-        </template>
+            <p>Replies</p>
+            <comments :comments="post.comments" offset="0"></comments>
+          </template>
+        </div>
       </div>
-    </div>
+    </template>
 
     <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
   </div>
@@ -81,9 +83,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  margin: 10px auto;
-}
 .author {
   margin-bottom: 10px;
 }
